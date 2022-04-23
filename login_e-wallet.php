@@ -1,10 +1,91 @@
 <?php
-
+session_start();
 require_once "connection_to_db.php";
+require_once "relay.php";
+require_once "query.php";
+$salt="zj@i*ksw.";
+if(isset($_POST['aadhar']) && isset($_POST['name']) && isset($_POST['phno']) && isset($_POST['email']) && isset($_POST['add']) && isset($_POST['pswd1']) && isset($_POST['pswd2']) && $_POST['pswd1']==$_POST['pswd2']){
+$selected_tables = new Table_Field_Rel(
+	"signup",
+
+	"aadhar",
+	"name",
+	"phno",
+	"email",
+	"address",
+	"passwd"
+);
 
 
+	$query = new MySQL_Query_Capsule($selected_tables);
+	$stored=hash('md5',$salt.$_POST['pswd1']);
+	$userList=array(
+		"'".$_POST['aadhar']."'",
+		"'".$_POST['name']."'",
+		"'".$_POST['phno']."'",
+		"'".$_POST['email']."'",
+		"'".$_POST['add']."'",
+		"'".$stored."'"
+	);
+	$insertion = $query->InsertValuesQuery(
+		implode(",", $userList)
+	);
+	echo "<script>console.log(\"" . "$insertion" . "\");</script>";
+	$dbc->PushQuery(
+		$insertion
+	);
 
-?>
+	$return = $dbc->FlushStack();
+
+}
+else{
+	echo "<script>console.log('All fields are important')</script>";
+}
+//echo "<script>console.log(\"" . "$return" . "\");</script>";
+	if(isset($_POST['uname1']) && isset($_POST['psw1'])){
+		$selected_tables = new Table_Field_Rel(
+			"signup",
+
+			"aadhar",
+			"name",
+			"phno",
+			"email",
+			"address",
+			"passwd"
+		);
+
+
+			$query = new MySQL_Query_Capsule($selected_tables);
+			$stored=hash('md5',$salt.$_POST['psw1']);
+			$userList=array(
+				
+				"'".$_POST['uname1']."'",
+				"'".$stored."'"
+			);
+			
+			$selection = $query->SelectFromQuery();
+			$selection = $query->Where($selection);
+			$selection = $query->Setwhere($selection,"name=$userList[0]");
+			$selection = $query->AND($selection);
+			$selection = $query->Setwhere($selection,"passwd=$userList[1]");
+			$out=$dbc->selectQuery(
+				$selection
+			);
+			$name=$out['name'];
+			$pwd=$out['passwd'];
+			if($name==$_POST['uname1'] and $pwd==$stored){
+				$_SESSION['name']=$out['name'];
+				$_SESSION['aadhar']=$out['aadhar'];
+				$_SESSION['phno']=$out['phno'];
+				$_SESSION['email']=$out['email'];
+				$_SESSION['address']=$out['address'];
+				$_SESSION['passwd']=$out['passwd'];
+				header("Location: home.php");
+			}
+			
+			echo "<script>console.log(\"" . "$o" . "\");</script>";
+		}
+	?>
 <!DOCTYPE html>
 <html>
 <style>
@@ -161,7 +242,7 @@ body{
 
 	<div id="id01" class="modal">
 
-		<form class="modal-content animate" action="WelcomeE-Wallet.html" method="post">
+		<form class="modal-content animate"  method="post">
 			<div class="imgcontainer">
 				<span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal">×</span>
 				<img src="https://truust.io/wp-content/uploads/sites/18/2019/11/Mobile-Wallets-vs-Payment-Banks-Whats-the-Difference.jpg" alt="Avatar" class="avatar">
@@ -169,10 +250,10 @@ body{
 
 			<div class="container">
 				<label><b>Username</b></label>
-				<input type="text" placeholder="Enter Username" name="uname" required>
+				<input type="text" placeholder="Enter Username" name="uname1" required>
 
 				<label><b>Password</b></label>
-				<input type="password" placeholder="Enter Password" name="psw" required>
+				<input type="password" placeholder="Enter Password" name="psw1" required>
 
 				<button type="submit">Login</button>
 				<input type="checkbox" checked="checked"> Remember me
@@ -185,7 +266,7 @@ body{
 	</div>
    <div id="id02" class="modal">
 
-		<form class="modal-content animate" action="WelcomeIndianBank.html" method="post">
+		<form class="modal-content animate"  method="post">
 			<div class="imgcontainer">
 				<span onclick="document.getElementById('id02').style.display='none'" class="close" title="Close Modal">×</span>
 				<img src="https://truust.io/wp-content/uploads/sites/18/2019/11/Mobile-Wallets-vs-Payment-Banks-Whats-the-Difference.jpg" alt="Avatar" class="avatar">
@@ -204,12 +285,12 @@ body{
 				<input type="text" placeholder="enter aadhar number" name="aadhar" required>
                         
                         <label><b>Email</b></label>
-				<input type="text" placeholder="Enter Username" name="uname" required>
+				<input type="text" placeholder="Enter Username" name="email" required>
                         </br>
 				<label><b>Password</b></label>
-				<input type="password" placeholder="Enter Password" name="psw" required>
+				<input type="password" placeholder="Enter Password" name="pswd1" required>
 				<label><b>Re-enter Password</b></label>
-				<input type="password" placeholder="Re-enter Password" name="psw" required>
+				<input type="password" placeholder="Re-enter Password" name="pswd2" required>
 				<button type="submit">Sign Up</button>
 				<input type="checkbox" checked="checked"> Remember me
 			</div>
