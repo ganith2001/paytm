@@ -108,6 +108,15 @@ class MySQL_Query_Capsule extends Query_Capsule
             }
             return "SELECT * FROM {$table_name}";
         }
+    public function UpdateQuery(string $value=" ",string $name=" ", string $select_format = ""): string
+        {
+            
+            $table_name =$this->_Tables[0];
+            if($this->_Selections){ 
+            return "UPDATE {$table_name} SET ".$name."=".$value;
+            }
+          
+        }
 
     public function Where($selection): string
         {
