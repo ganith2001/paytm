@@ -13,7 +13,8 @@ $selected_tables = new Table_Field_Rel(
 	"phno",
 	"email",
 	"address",
-	"passwd"
+	"passwd",
+	"DOB"
 );
 
 
@@ -25,7 +26,8 @@ $selected_tables = new Table_Field_Rel(
 		"'".$_POST['phno']."'",
 		"'".$_POST['email']."'",
 		"'".$_POST['add']."'",
-		"'".$stored."'"
+		"'".$stored."'",
+		"'".$_POST['birthday']."'"
 	);
 	$insertion = $query->InsertValuesQuery(
 		implode(",", $userList)
@@ -51,7 +53,8 @@ else{
 			"phno",
 			"email",
 			"address",
-			"passwd"
+			"passwd",
+			"DOB"
 		);
 
 
@@ -65,14 +68,15 @@ else{
 			
 			$selection = $query->SelectFromQuery();
 			$selection = $query->Where($selection);
-			$selection = $query->Setwhere($selection,"name=$userList[0]");
+			$selection = $query->Setwhere($selection,"phno=$userList[0]");
 			$selection = $query->AND($selection);
 			$selection = $query->Setwhere($selection,"passwd=$userList[1]");
 			$out=$dbc->selectQuery(
 				$selection
 			);
-			$name=$out['name'];
+			$name=$out['phno'];
 			$pwd=$out['passwd'];
+			
 			if($name==$_POST['uname1'] and $pwd==$stored){
 				$_SESSION['name']=$out['name'];
 				$_SESSION['aadhar']=$out['aadhar'];
@@ -80,6 +84,7 @@ else{
 				$_SESSION['email']=$out['email'];
 				$_SESSION['address']=$out['address'];
 				$_SESSION['passwd']=$out['passwd'];
+				$_SESSION['DOB']=$out['DOB'];
 				header("Location: home.php");
 			}
 			
@@ -249,8 +254,8 @@ body{
 			</div>
 
 			<div class="container">
-				<label><b>Username</b></label>
-				<input type="text" placeholder="Enter Username" name="uname1" required>
+				<label><b>Phone Number</b></label>
+				<input type="text" placeholder="Enter phone number" name="uname1" required>
 
 				<label><b>Password</b></label>
 				<input type="password" placeholder="Enter Password" name="psw1" required>
@@ -287,6 +292,8 @@ body{
                         <label><b>Email</b></label>
 				<input type="text" placeholder="Enter Username" name="email" required>
                         </br>
+				<label><b>DOB</b></label>
+				<input type="date" id="birthday" name="birthday"><br>
 				<label><b>Password</b></label>
 				<input type="password" placeholder="Enter Password" name="pswd1" required>
 				<label><b>Re-enter Password</b></label>

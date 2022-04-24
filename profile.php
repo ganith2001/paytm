@@ -4,7 +4,9 @@ require_once "connection_to_db.php";
 require_once "relay.php";
 require_once "query.php";
 
-
+if(!isset($_SESSION['aadhar']) && !isset($_SESSION['phno'])){
+  header("Location: home.php");
+}
 $selected_tables = new Table_Field_Rel(
 	"signup",
 
@@ -29,19 +31,26 @@ else if(isset($_POST['save3'])&& isset($_POST['address'])){
 else if(isset($_POST['save4']) && isset($_POST['phno'])){
     $a="phno";
 }
-else if(isset($_POST['save5']) && isset($_POST['passwd'])){
-    $a="passwd";
+else if(isset($_POST['save5']) && isset($_POST['DOB'])){
+    $a="DOB";
 }
 else if(isset($_POST['save6']) && isset($_POST['aadhar'])) {
     $a="aadhar";
 }
-else if(isset($_POST['save1']) || isset($_POST['save2']) || isset($_POST['save3']) || isset($_POST['save4']) || isset($_POST['save5']) || isset($_POST['save6'])){
-    header("Location: home.php");
+else if(isset($_POST['save7']) && isset($_POST['passwd']) && isset($_POST['psw2']) && $_POST['passwd']==$_POST['psw2']) {
+  $a="passwd";
 }
-if(isset($_POST['save1']) || isset($_POST['save2']) || isset($_POST['save3']) || isset($_POST['save4']) || isset($_POST['save5']) || isset($_POST['save6'])){
+else if(isset($_POST['save1']) || isset($_POST['save2']) || isset($_POST['save3']) || isset($_POST['save4']) || isset($_POST['save5']) || isset($_POST['save6']) || isset($_POST['save7'])){
+   header("Location: home.php");
+}
+if(isset($_POST['save1']) || isset($_POST['save2']) || isset($_POST['save3']) || isset($_POST['save4']) || isset($_POST['save5']) || isset($_POST['save6']) || isset($_POST['save7'])){
     echo "<script>console.log(\"" . "$a" . "\");</script>";
         $userList="'".$_POST[$a]."'";
-        
+        if(isset($_POST['save7'])){
+          $salt="zj@i*ksw.";
+          $stored=hash('md5',$salt.$_POST['passwd']);
+          $userList="'".$stored."'";
+        }
         $updation = $query->UpdateQuery(
         $userList,
         $a
@@ -79,15 +88,31 @@ if(isset($_POST['save1']) || isset($_POST['save2']) || isset($_POST['save3']) ||
     Phone number:
     <input type="text" value=<?php echo "'".$_SESSION['phno']."'" ;?> id="lname4" name="phno" > <button name="save4">Save</button></form><button  id="btn4" onclick="myFunction4()">Edit</button><br><br>
     <form method="post">
-    Password:
-    <input type="text" value=<?php echo "'".$_SESSION['passwd']."'" ;?> id="lname5" name="passwd" ><button name="save5">Save</button></form> <button id="btn5" onclick="myFunction5()">Edit</button><br><br>
+    DOB:
+    <input type="date" value=<?php echo "'".$_SESSION['DOB']."'" ;?> id="lname5" name="DOB" ><button name="save5">Save</button></form> <button id="btn5" onclick="myFunction5()">Edit</button><br><br>
     <form method="post">
     Aadhar:
     <input type="text"  value=<?php echo "'".$_SESSION['aadhar']."'" ;?> id="lname6" name="aadhar" ><button name="save6">Save</button></form> <button id="btn6" onclick="myFunction6()">Edit</button><br><br>
 
-    
+    <form method="post">
+    Password:
+    <input type="password"  id="lname7" name="passwd" ><br>
+    Confirm password:
+    <input type="password"  id="lname8" name="psw2" >
+    <button name="save7">Save</button></form> <br><br>
 
+    <form action="upload.php"
+           method="post"
+           enctype="multipart/form-data">
 
+           <input type="file" 
+                  name="my_image">
+
+           <input type="submit" 
+                  name="submit"
+                  value="Upload">
+     	
+     </form>
 
 
 
