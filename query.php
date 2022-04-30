@@ -118,6 +118,17 @@ class MySQL_Query_Capsule extends Query_Capsule
           
         }
 
+        
+    public function DeleteQuery(string $value=" ",string $name=" ", string $select_format = ""): string
+    {
+        
+        $table_name =$this->_Tables[0];
+        if($this->_Selections){ 
+        return "DELETE FROM {$table_name}";
+        }
+      
+    }
+
     public function Where($selection): string
         {
       

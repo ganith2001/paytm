@@ -54,7 +54,18 @@
             }
         }
         
-      
+        public function selectMultiplrQuery(string $query)
+        {
+            try {
+                
+                $result=$this->RelayQuery($query);
+                $res=mysqli_fetch_all($result);
+              
+                return $res;
+            } catch (Exception $e) {
+                throw $e;
+            }
+        }
 
         public function FlushStack()
         {
