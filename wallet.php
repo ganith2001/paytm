@@ -150,10 +150,69 @@ $o=$out[0][1];
 			);
             $wallet=$out3['wallet'];
             echo "<script>console.log(\"" . "$wallet" . "\");</script>";
+
+
+            if(isset($_POST['Amount']) && isset($_POST['cvv2']) && isset($_POST['exp2']) && $_POST['cvv2']==$out2['cvv'] &&  $_POST['exp2']."-01"==$out2['Expiry'] && $_POST['Amount']<$out2['balance'] ){
+                echo "<script>console.log('Hello everyone');</script>";
+                $selected_tables = new Table_Field_Rel(
+                    "signup",
+                
+                    "aadhar",
+                    "name",
+                    "phno",
+                    "email",
+                    "address",
+                    "passwd"
+                );
+                $a="wallet";
+                $query = new MySQL_Query_Capsule($selected_tables);
+                $userList=$_POST['Amount']+$wallet;
+               
+                $updation = $query->UpdateQuery(
+                $userList,
+                $a
+                );
+                $updation = $query->Where($updation);
+                $updation = $query->Setwhere($updation,"aadhar='".$_SESSION['aadhar']."'");
+                echo "<script>console.log(\"" . "$updation" . "\");</script>";
+                $dbc->PushQuery(
+                    $updation
+                );
+        
+                $return = $dbc->FlushStack();
+
+                $selected_tables = new Table_Field_Rel(
+                    "userbank",
+                
+                    "BIC",
+                    "AccountID"
+                   
+                );
+                $a="balance";
+                $query = new MySQL_Query_Capsule($selected_tables);
+                $userList=$out2['balance']-$_POST['Amount'];
+               
+                $updation = $query->UpdateQuery(
+                $userList,
+                $a
+                );
+                $updation = $query->Where($updation);
+                $updation = $query->Setwhere($updation,"aadhar='".$_SESSION['aadhar']."'");
+                echo "<script>console.log(\"" . "$updation" . "\");</script>";
+                $dbc->PushQuery(
+                    $updation
+                );
+        
+                $return = $dbc->FlushStack();
+                header("Location: wallet.php");
+
+               
+            }
   ?>
 <h1>Balence</h1>
 <a href="home.php">Home</a>
 <p>Wallet Balence: rs <?php echo($wallet) ?> </p>
+
 <?php if(!isset($out2)){ ?>
 <form method="post"><button name="addbank">+ ADD Bank</button></form>
 <?php if(isset($_POST['addbank'])){ ?>
@@ -186,4 +245,13 @@ Expiry: <input type="month" name="exp" >
 <form method="post">
 <button name="remove2">Remove Account</button>
 </form>
+<form method="post"><button name="transfer">Transfer</button></form>
+<?php if(isset($_POST['transfer'])){ ?>
+    <form method="post">
+          Amount:  <input type="number" name="Amount">
+            CVV:  <input type="number" name="cvv2" max=999 min=100>
+            Expiry:  <input type="month" name="exp2"><br>
+            <button name="Confirm">Confirm</button>
+            </form>
+    <?php } ?>
 <?php }  ?>
