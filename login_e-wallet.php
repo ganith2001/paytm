@@ -54,7 +54,8 @@ else{
 			"email",
 			"address",
 			"passwd",
-			"DOB"
+			"DOB",
+			"wallet"
 		);
 
 
@@ -85,6 +86,7 @@ else{
 				$_SESSION['address']=$out['address'];
 				$_SESSION['passwd']=$out['passwd'];
 				$_SESSION['DOB']=$out['DOB'];
+				$_SESSION['wallet']=$out['wallet'];
 				header("Location: home.php");
 			}
 			

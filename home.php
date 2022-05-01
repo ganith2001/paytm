@@ -13,6 +13,7 @@ if(!isset($_SESSION['aadhar']) && !isset($_SESSION['phno'])){
 ?>
 <a href="profile.php">Profile</a>
 <a href="cart.php">Cart</a>
+<a href="wallet.php">Balence</a>
 <a href="logout.php">Logout</a>
 
 
