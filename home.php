@@ -61,7 +61,7 @@ $o=$out[0][1];
     <td><?php echo($o[1])?></td>
     <td><?php echo($o[2])?></td>
     <td><?php echo($o[3])?></td>
-    <td><?php echo("rs ".$o[4])?></td>
+    <td>&#8377; <?php echo($o[4])?></td>
     <td><?php echo($o[5])?></td>
     <td><form method="post"><button name=<?php echo("'"."name".$id."'") ?> value="add">Add</button></form></td>
   </tr>

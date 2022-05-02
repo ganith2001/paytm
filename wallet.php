@@ -211,7 +211,7 @@ $o=$out[0][1];
   ?>
 <h1>Balence</h1>
 <a href="home.php">Home</a>
-<p>Wallet Balence: rs <?php echo($wallet) ?> </p>
+<p>Wallet Balence: &#8377; <?php echo($wallet) ?> </p>
 
 <?php if(!isset($out2)){ ?>
 <form method="post"><button name="addbank">+ ADD Bank</button></form>
@@ -241,7 +241,7 @@ Expiry: <input type="month" name="exp" >
 <img src=<?php echo("'".$out2['bankLogo']."'") ?> style="height:50px;width:50px"> <p><?php echo($out2['bankName']) ?></P>
 <p>Name: <?php echo($out2['Name']) ?></P>
 <p>AccountID: <?php echo($out2['AccountID']) ?></P>
-<p>Balance: <?php echo($out2['balance']) ?></P>
+<p>Balance: &#8377; <?php echo($out2['balance']) ?></P>
 <form method="post">
 <button name="remove2">Remove Account</button>
 </form>
