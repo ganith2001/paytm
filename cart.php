@@ -189,8 +189,8 @@ $selected_tables = new Table_Field_Rel(
   $out2=$dbc->selectQuery(
       $selection
   );
-  $error="";
-  if(isset($_POST['address']) && isset($_POST['cvv2']) && isset($_POST['exp2']) && $_POST['cvv2']==$out2['cvv'] &&  $_POST['exp2']."-01"==$out2['Expiry'] && $_POST['Amount']<$out2['balance'] ){
+
+  if(isset($_POST['address']) && isset($_POST['cvv2']) && isset($_POST['exp2']) && $_POST['cvv2']==$out2['cvv'] &&  $_POST['exp2']."-01"==$out2['Expiry'] && $total<$out2['balance'] ){
     $error="";
     $selected_tables = new Table_Field_Rel(
       "userbank",
@@ -275,11 +275,11 @@ $return = $dbc->FlushStack();
 header("Location: cart.php");
 
   }
-  else if($_POST['Amount']>$out2['balance']){
-    $error="No sufficient amount in your account";
+  else if($total>$out2['balance']){
+   echo("No sufficient amount");
   }
 ?>
-<p style="color:red"><?php $error ?> </p>
+
 <h1> Orders Placed </h1>
 
 
