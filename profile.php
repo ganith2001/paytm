@@ -92,14 +92,83 @@ if(isset($_POST['save1']) || isset($_POST['save2']) || isset($_POST['save3']) ||
       $out5=$dbc->selectQuery(
         $selection
       );
+
+      $selected_tables = new Table_Field_Rel(
+        "profile",
+        
+        "aadhar",
+        "filename"
+      );
+  
+  
+        $query = new MySQL_Query_Capsule($selected_tables);
+    
+        $userList=array(
+          
       
+          "'".$_SESSION['aadhar']."'"
+        );
+        
+        $selection = $query->SelectFromQuery();
+        $selection = $query->Where($selection);
+        $selection = $query->Setwhere($selection,"aadhar=$userList[0]");
+     
+        $out6=$dbc->selectQuery(
+          $selection
+        );
+      
+      if(isset($_POST['submit2'])){
+        $filename=$_FILES['my_image2']['name'];
+        $filetype=$_FILES['my_image2']['type'];
+        $filesize=$_FILES['my_image2']['size'];
+        $filetemloc=$_FILES['my_image2']['tmp_name'];
+        $filestore="dp/dp".$_SESSION['aadhar']."".$filename;
+  
+  
+  
+  
+        if(move_uploaded_file($filetemloc,$filestore)){
+          echo("Files are updated");
+          $selected_tables = new Table_Field_Rel(
+            "profile",
+          
+            "aadhar",
+            "filename"
+          );
+          
+          
+            $query = new MySQL_Query_Capsule($selected_tables);
+        
+            $userList=array(
+              "'".$_SESSION['aadhar']."'",
+              "'".$_SESSION['aadhar']."".$filename."'",
+         
+            );
+            $insertion = $query->InsertValuesQuery(
+              implode(",", $userList)
+            );
+            echo "<script>console.log(\"" . "$insertion" . "\");</script>";
+            $dbc->PushQuery(
+              $insertion
+            );
+          
+            $return = $dbc->FlushStack();
+        
+            header("Location: profile.php");
+        }
+        else{
+          echo("Files are not uploaded");
+        }
+      }
+
+
      
     if(isset($_POST['submit'])){
       $filename=$_FILES['my_image']['name'];
       $filetype=$_FILES['my_image']['type'];
       $filesize=$_FILES['my_image']['size'];
       $filetemloc=$_FILES['my_image']['tmp_name'];
-      $filestore="upload/".$_SESSION['aadhar']."".$filename;
+      $filestore="upload/a".$_SESSION['aadhar']."".$filename;
 
 
 
@@ -118,7 +187,7 @@ if(isset($_POST['save1']) || isset($_POST['save2']) || isset($_POST['save3']) ||
       
           $userList=array(
             "'".$_SESSION['aadhar']."'",
-            "'".$_SESSION['aadhar']."".$filename."'",
+            "'a".$_SESSION['aadhar']."".$filename."'",
        
           );
           $insertion = $query->InsertValuesQuery(
@@ -143,7 +212,31 @@ if(isset($_POST['save1']) || isset($_POST['save2']) || isset($_POST['save3']) ||
    
 </head>
     <body>
-    <a href="home.php">Home</a>
+    <a href="home.php">Home</a><br>
+    <?php if(!isset($out6['aadhar'])) { ?>
+    <img src="https://cdn.onlinewebfonts.com/svg/img_87237.png" style="height: 50px;width: 50px;">
+    <form 
+           method="post"
+           enctype="multipart/form-data">
+
+           <input type="file" 
+                  name="my_image2"
+                  >
+
+           <input type="submit" 
+                  name="submit2"
+                  value="Upload">
+     	
+     </form>
+
+     <?php } else { ?>
+      <img src="<?php echo("dp\dp".$out6['filename']) ?>" style="height: 50px;width: 50px;">
+
+  <?php }
+    ?>
+
+
+
      <form method="post">  
     Name:
     <input type="text" value=<?php echo "'".$_SESSION['name']."'" ;?> id="lname1" name="name" ><button name="save1">Save</button></form> <button  id="btn1" onclick="myFunction1()">Edit</button><br><br>
