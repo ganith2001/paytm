@@ -67,7 +67,76 @@ if(isset($_POST['save1']) || isset($_POST['save2']) || isset($_POST['save3']) ||
         echo "<script>console.log(\"" . "$a" . "\");</script>";
         header("Location: home.php");
     }
+
+    
+    $selected_tables = new Table_Field_Rel(
+      "kyc",
+      
+      "aadhar",
+      "filename"
+    );
+
+
+      $query = new MySQL_Query_Capsule($selected_tables);
+  
+      $userList=array(
+        
+    
+        "'".$_SESSION['aadhar']."'"
+      );
+      
+      $selection = $query->SelectFromQuery();
+      $selection = $query->Where($selection);
+      $selection = $query->Setwhere($selection,"aadhar=$userList[0]");
+   
+      $out5=$dbc->selectQuery(
+        $selection
+      );
+      
      
+    if(isset($_POST['submit'])){
+      $filename=$_FILES['my_image']['name'];
+      $filetype=$_FILES['my_image']['type'];
+      $filesize=$_FILES['my_image']['size'];
+      $filetemloc=$_FILES['my_image']['tmp_name'];
+      $filestore="upload/".$_SESSION['aadhar']."".$filename;
+
+
+
+
+      if(move_uploaded_file($filetemloc,$filestore)){
+        echo("Files are updated");
+        $selected_tables = new Table_Field_Rel(
+          "kyc",
+        
+          "aadhar",
+          "filename"
+        );
+        
+        
+          $query = new MySQL_Query_Capsule($selected_tables);
+      
+          $userList=array(
+            "'".$_SESSION['aadhar']."'",
+            "'".$_SESSION['aadhar']."".$filename."'",
+       
+          );
+          $insertion = $query->InsertValuesQuery(
+            implode(",", $userList)
+          );
+          echo "<script>console.log(\"" . "$insertion" . "\");</script>";
+          $dbc->PushQuery(
+            $insertion
+          );
+        
+          $return = $dbc->FlushStack();
+      
+          header("Location: profile.php");
+      }
+      else{
+        echo("Files are not uploaded");
+      }
+    }
     ?>
 <html>
     <head>
@@ -100,8 +169,9 @@ if(isset($_POST['save1']) || isset($_POST['save2']) || isset($_POST['save3']) ||
     Confirm password:
     <input type="password"  id="lname8" name="psw2" >
     <button name="save7">Save</button></form> <br><br>
-
-    <form action="upload.php"
+    <?php if(!isset($out5['aadhar'])) { ?>
+<p><img src="https://th.bing.com/th/id/OIP.hVcu4BKMOR7bIDEzPJRbGQHaHa?pid=ImgDet&rs=1" style="height:12px;width:12px"> KYC pending </p>
+    <form 
            method="post"
            enctype="multipart/form-data">
 
@@ -113,6 +183,11 @@ if(isset($_POST['save1']) || isset($_POST['save2']) || isset($_POST['save3']) ||
                   value="Upload">
      	
      </form>
+<?php } else { ?>
+  <p><img src="https://upload.wikimedia.org/wikipedia/commons/4/47/Done.png" style="height:12px;width:12px"> KYC completed </p>
+
+  <?php }
+    ?>
 
 
 
