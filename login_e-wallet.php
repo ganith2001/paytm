@@ -27,7 +27,8 @@ $selected_tables = new Table_Field_Rel(
 		"'".$_POST['email']."'",
 		"'".$_POST['add']."'",
 		"'".$stored."'",
-		"'".$_POST['birthday']."'"
+		"'".$_POST['birthday']."'",
+		0
 	);
 	$insertion = $query->InsertValuesQuery(
 		implode(",", $userList)
