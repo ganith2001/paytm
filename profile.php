@@ -5,7 +5,7 @@ require_once "relay.php";
 require_once "query.php";
 
 if(!isset($_SESSION['aadhar']) && !isset($_SESSION['phno'])){
-  header("Location: login_e-wallet.php");
+  header("Location: signup.php");
 }
 $selected_tables = new Table_Field_Rel(
 	"signup",
