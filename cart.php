@@ -1,5 +1,5 @@
 <h1>Shopping Cart</h1>
-<a href="home.php">Home</a>
+<a href="shopping.php">Shopping</a>
 <?php
 session_start();
 require_once "connection_to_db.php";

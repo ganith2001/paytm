@@ -94,7 +94,7 @@ class MySQL_Query_Capsule extends Query_Capsule
         $table_name =$this->_Tables[0];
      
         $sql= "INSERT INTO {$table_name}  VALUES ({$values})";
-      
+        echo "<script>console.log(\"" . "$sql" . "\");</script>";
         return $sql;
        
     }

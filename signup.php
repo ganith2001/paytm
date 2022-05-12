@@ -4,6 +4,10 @@ require_once "connection_to_db.php";
 require_once "relay.php";
 require_once "query.php";
 
+if(isset($_SESSION['aadhar']) && isset($_SESSION['phno'])){
+	header("Location: home.php");
+  }
+
 date_default_timezone_set("India");
 $todayyear=date("y");
 $year=(int)"20".$todayyear;
@@ -12,7 +16,7 @@ $eighteen=$year-18;
 $today=date("y-m-d");
 $todayM=substr($today,3);
 $eighteenplus="".$eighteen."-".$todayM."";
-echo $eighteenplus;
+
 $salt="zj@i*ksw.";
 if(isset($_POST['aadhar']) && isset($_POST['name']) && isset($_POST['phno']) && isset($_POST['email']) && isset($_POST['add']) && isset($_POST['pswd1']) && isset($_POST['pswd2']) && isset($_POST['birthday']) && $_POST['pswd1']==$_POST['pswd2'] && strlen($_POST['aadhar'])==12 && strlen($_POST['phno'])==10 && $eighteenplus>=$_POST['birthday'] && strlen($_POST['pswd1'])>=8  ){
 	echo "<script>console.log('ffff');</script>";
